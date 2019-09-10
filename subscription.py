@@ -3,11 +3,24 @@
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
+from trytond.pyson import Eval, Bool
 
 
 class Subscription(metaclass=PoolMeta):
     __name__ = 'sale.subscription'
-    total_discount = fields.Boolean('Total Discount')
+    total_discount = fields.Boolean('Total Discount',
+        states={
+            'readonly': Eval('state') != 'draft',
+            },
+        depends=['state'])
+    total_discount_end_date = fields.Date(
+        "Total Discount End Date", required=True,
+        states={
+            'readonly': ((Eval('state') != 'draft')
+                | Eval('next_invoice_date')),
+            'required': Bool(Eval('total_discount')),
+            },
+        depends=['state', 'next_invoice_date'])
 
     @staticmethod
     def default_total_discount():
@@ -34,7 +47,8 @@ class Subscription(metaclass=PoolMeta):
 
     def _get_invoice(self):
         invoice = super(Subscription, self)._get_invoice()
-        invoice.subscription_total_discount = self.total_discount
+        if self.next_invoice_date <= self.total_discount_end_date:
+            invoice.subscription_total_discount = self.total_discount
         return invoice
 
 
