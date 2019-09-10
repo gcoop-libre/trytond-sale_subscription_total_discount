@@ -115,6 +115,7 @@ Subscribe::
     >>> subscription.invoice_start_date = datetime.date(2016, 2, 1)
     >>> subscription.invoice_recurrence = monthly
     >>> subscription.total_discount = True
+    >>> subscription.total_discount_end_date = datetime.date(2016, 2, 28)
     >>> line = subscription.lines.new()
     >>> line.service = service
     >>> line.quantity = 10
@@ -159,6 +160,8 @@ Create subscription invoice::
     310.0
     >>> line.unit_price
     Decimal('10.0000')
+    >>> bool(invoice.subscription_total_discount)
+    True
     >>> invoice.state
     'cancel'
 
@@ -199,7 +202,8 @@ Create final subscription invoice::
 
     >>> len(Invoice.find([]))
     2
-    >>> invoices = Invoice.find([])
-    >>> invoice = invoices[1]
+    >>> invoice, = Invoice.find([('subscription_total_discount', '=', False)])
+    >>> bool(invoice.subscription_total_discount)
+    False
     >>> invoice.state
-    'cancel'
+    'draft'

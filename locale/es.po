@@ -5,3 +5,7 @@ msgstr "Content-Type: text/plain; charset=utf-8\n"
 msgctxt "field:sale.subscription,total_discount:"
 msgid "Total Discount"
 msgstr "Descuento 100%"
+
+msgctxt "field:sale.subscription,total_discount_end_date:"
+msgid "Total Discount End Date"
+msgstr "Descuento aplicado hasta"
