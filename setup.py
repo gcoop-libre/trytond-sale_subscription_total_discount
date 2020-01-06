@@ -54,7 +54,7 @@ if minor_version % 2:
 setup(name=name,
     version=version,
     description='Tryton module for total discount at Subscriptions',
-    long_description=read('README.rst'),
+    long_description=read('README'),
     author='tryton-ar',
     url='https://github.com/tryton-ar/sale_subscription_total_discount',
     download_url=download_url,
