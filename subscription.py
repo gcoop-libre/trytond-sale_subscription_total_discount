@@ -14,11 +14,11 @@ class Subscription(metaclass=PoolMeta):
             },
         depends=['state'])
     total_discount_end_date = fields.Date(
-        "Total Discount End Date", required=True,
+        "Total Discount End Date",
         states={
             'readonly': ((Eval('state') != 'draft')
                 | Eval('next_invoice_date')),
-            'required': Bool(Eval('total_discount')),
+            'required': Eval('total_discount', False),
             },
         depends=['state', 'next_invoice_date'])
 
