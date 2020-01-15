@@ -20,7 +20,7 @@ class Subscription(metaclass=PoolMeta):
                 | Eval('next_invoice_date')),
             'required': Eval('total_discount', False),
             },
-        depends=['state', 'next_invoice_date'])
+        depends=['state', 'total_discount', 'next_invoice_date'])
 
     @staticmethod
     def default_total_discount():
@@ -47,8 +47,18 @@ class Subscription(metaclass=PoolMeta):
 
     def _get_invoice(self):
         invoice = super(Subscription, self)._get_invoice()
-        if self.next_invoice_date <= self.total_discount_end_date:
+        try:
+            CancelReason = Pool().get('account.invoice.cancel.reason')
+        except CancelReason:
+            CancelReason = None
+
+        if (self.total_discount
+                and self.next_invoice_date <= self.total_discount_end_date):
             invoice.subscription_total_discount = self.total_discount
+            if CancelReason:
+                cancel_reason, = CancelReason.search([('name', '=', 'Bonificacion')])
+                invoice.cancel_description = 'BONIFICACION 100%'
+                invoice.cancel_reason = cancel_reason
         return invoice
 
 
