@@ -3,11 +3,12 @@
 
 from trytond.model import fields
 from trytond.pool import Pool, PoolMeta
-from trytond.pyson import Eval, Bool
+from trytond.pyson import Eval
 
 
 class Subscription(metaclass=PoolMeta):
     __name__ = 'sale.subscription'
+
     total_discount = fields.Boolean('Total Discount',
         states={
             'readonly': Eval('state') != 'draft',
@@ -40,9 +41,9 @@ class Subscription(metaclass=PoolMeta):
         Invoice = Pool().get('account.invoice')
         super().generate_invoice(date)
         invoices = Invoice.search([
-                ('state', '=', 'draft'),
-                ('subscription_total_discount', '=', True)
-                ])
+            ('state', '=', 'draft'),
+            ('subscription_total_discount', '=', True)
+            ])
         Invoice.cancel(invoices)
 
     def _get_invoice(self):
@@ -56,7 +57,9 @@ class Subscription(metaclass=PoolMeta):
                 and self.next_invoice_date <= self.total_discount_end_date):
             invoice.subscription_total_discount = self.total_discount
             if CancelReason:
-                cancel_reason, = CancelReason.search([('name', '=', 'Bonificacion')])
+                cancel_reason, = CancelReason.search([
+                    ('name', '=', 'Bonificacion'),
+                    ])
                 invoice.cancel_description = 'BONIFICACION 100%'
                 invoice.cancel_reason = cancel_reason
         return invoice
@@ -64,6 +67,7 @@ class Subscription(metaclass=PoolMeta):
 
 class Invoice(metaclass=PoolMeta):
     __name__ = 'account.invoice'
+
     subscription_total_discount = fields.Boolean('Total Discount')
 
     @staticmethod
