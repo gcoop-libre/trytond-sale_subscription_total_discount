@@ -2,9 +2,13 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "field:account.invoice,subscription_total_discount:"
+msgid "Total Discount"
+msgstr "Descuento total"
+
 msgctxt "field:sale.subscription,total_discount:"
 msgid "Total Discount"
-msgstr "Descuento 100%"
+msgstr "Descuento total"
 
 msgctxt "field:sale.subscription,total_discount_end_date:"
 msgid "Total Discount End Date"
