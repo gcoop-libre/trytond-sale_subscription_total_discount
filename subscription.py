@@ -49,7 +49,7 @@ class Subscription(metaclass=PoolMeta):
         invoice = super(Subscription, self)._get_invoice()
         try:
             CancelReason = Pool().get('account.invoice.cancel.reason')
-        except CancelReason:
+        except KeyError:
             CancelReason = None
 
         if (self.total_discount
