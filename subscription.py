@@ -33,12 +33,12 @@ class Subscription(metaclass=PoolMeta):
         else:
             default = default.copy()
         default.setdefault('total_discount', None)
-        return super(Subscription, cls).copy(subscriptions, default=default)
+        return super().copy(subscriptions, default=default)
 
     @classmethod
     def generate_invoice(cls, date=None):
-        super(Subscription, cls).generate_invoice(date)
         Invoice = Pool().get('account.invoice')
+        super().generate_invoice(date)
         invoices = Invoice.search([
                 ('state', '=', 'draft'),
                 ('subscription_total_discount', '=', True)
@@ -46,7 +46,7 @@ class Subscription(metaclass=PoolMeta):
         Invoice.cancel(invoices)
 
     def _get_invoice(self):
-        invoice = super(Subscription, self)._get_invoice()
+        invoice = super()._get_invoice()
         try:
             CancelReason = Pool().get('account.invoice.cancel.reason')
         except KeyError:
